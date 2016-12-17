@@ -15,7 +15,8 @@ public class AuthServiceImpl implements AuthService {
     private TokenRedis tokenRedis;
 
 
-    @Override
+
+
     public boolean isTokenLegally(String mToken) {
         Token token = tokenRedis.getToken(mToken);
         if (token == null) {
@@ -27,11 +28,15 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
 
-        return false;
+        token.addCount();
+
+        return true;
     }
 
     @Override
     public String grantToken(String userName) {
+
+
         return null;
     }
 }

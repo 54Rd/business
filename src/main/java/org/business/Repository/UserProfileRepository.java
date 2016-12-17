@@ -17,4 +17,7 @@ public interface UserProfileRepository extends CrudRepository<UserProfile, Long>
     @Query("select count(1) from UserProfile where username = :username")
     int findCountByUserName(@Param("username") String username);
 
+    @Query("select u.userID from UserProfile u where username = :username")
+    Long findUserIDByUserName(@Param("username") String username);
+
 }

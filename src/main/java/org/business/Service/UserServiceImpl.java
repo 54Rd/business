@@ -2,7 +2,11 @@ package org.business.Service;
 
 import org.business.Bean.UserAuthLocal;
 import org.business.Bean.UserCon;
+import org.business.Bean.UserMeta;
 import org.business.Bean.UserProfile;
+import org.business.Common.Out.Meta;
+import org.business.Common.Out.Out;
+import org.business.Common.Out.OutFactory;
 import org.business.Repository.UserAuthRepository;
 import org.business.Repository.UserConRepository;
 import org.business.Repository.UserProfileRepository;
@@ -25,58 +29,49 @@ public class UserServiceImpl implements UserService {
     UserProfileRepository userProfileRepository;
 
     @Override
-    public boolean createUser(String userName, String realName, String password) {
+    public Out createUser(String userName, String realName, String password) {
+        if(userProfileRepository.findCountByUserName(userName)>0){
+            return OutFactory.create(UserMeta.AccountRepeat);
+        }
+
         UserProfile profile = userProfileRepository.save(new UserProfile(userName,realName));
         if (profile==null) {
-            return false;
+            return OutFactory.create(Meta.FailData);
         }
 
         Long userID = profile.getUserID();
         UserAuthLocal userAuthLocal = userAuthRepository.save(new UserAuthLocal(userID,userName,password));
         if (userAuthLocal==null){
-            return false;
+            return OutFactory.create(Meta.FailData);
         }
 
         UserCon userCon = userConRepository.save(new UserCon(userID,100,0,1));
         if(userCon==null){
-            return false;
+            return OutFactory.create(Meta.FailData);
         }
 
-        return true;
+        return OutFactory.create(Meta.Success);
     }
 
     @Override
-    public boolean banUserByUserName(String userName) {
-
-
-
-        return false;
+    public Out banUserByUserName(String userName) {
+        Long userID = findUserIDByUserName(userName);
+        return banUserByUserID(userID);
     }
 
     @Override
-    public boolean banUserByUserID(Long userID) {
+    public Out banUserByUserID(Long userID) {
         UserCon userCon = userConRepository.findByUserID(userID);
         userCon.setIsLimit(1);
         userCon = userConRepository.save(userCon);
         if(userCon==null) {
-            return false;
+            return OutFactory.create(Meta.FailData);
         }
-        return true;
+        return OutFactory.create(Meta.Success);
     }
 
-    @Override
-    public boolean deleteUserByUserID(Long userID) {
-        UserCon userCon = userConRepository.findByUserID(userID);
-        userCon.setDataStatus(0);
-        userCon = userConRepository.save(userCon);
-        if(userCon==null) {
-            return false;
-        }
-        return true;
+    public Long findUserIDByUserName(String userName){
+        return userProfileRepository.findUserIDByUserName(userName);
     }
 
-    @Override
-    public int findCountByUserName(String userName) {
-        return userProfileRepository.findCountByUserName(userName);
-    }
 }

@@ -1,8 +1,9 @@
 package org.business.Controller;
 
-import org.business.Bean.Out;
-import org.business.Bean.UserProfile;
+import org.business.Common.Out.Meta;
+import org.business.Common.Out.Out;
 import org.business.Common.BaseController;
+import org.business.Common.Out.OutFactory;
 import org.business.Service.UserService;
 import org.business.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +34,10 @@ public class UserController extends BaseController {
                         @RequestParam(value = "password") String password,
                         @RequestParam(value = "realname") String realname) {
 
-        System.out.println(name+password+realname);
-        if (StringUtils.anyEmpty(name, password, realname))
-            return writeJsonFail("参数不全");
+        if (StringUtils.anyEmpty(name, password, realname)) {
+            return OutFactory.create(Meta.ErrorParam);
+        }
 
-        int count = userService.findCountByUserName(name);
-        if(count>0)
-            return writeJsonFail("已被注册");
-
-        boolean isDone = userService.createUser(name,realname,password);
-        return isDone?writeJsonSuccess("创建成功",null):writeJsonFail();
+        return userService.createUser(name, realname, password);
     }
 }
