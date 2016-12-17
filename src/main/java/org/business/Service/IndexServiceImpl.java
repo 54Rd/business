@@ -11,15 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class IndexServiceImpl implements IndexService {
 
-
     @Override
-    public Out getOut() {
-
-        return new Out(Meta.Success);
-    }
-
-    @Override
-    public Out getOutData() {
-        return new OutData(Meta.Success,null);
+    public Out getSomething() {
+        return null;
     }
 }

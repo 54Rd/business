@@ -6,5 +6,5 @@ package org.business.Service;
 public interface AuthService {
 
 
-    String grantToken(String userName);
+    String grantToken(Long userID);
 }

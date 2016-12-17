@@ -10,6 +10,7 @@ public class Token implements Serializable {
     private static final long serialVersionUID = -1L;
 
     private String token;
+    private Long createTime;
     private Long expiredTime;
     private Long userID;
     private int count = 0;
@@ -17,11 +18,19 @@ public class Token implements Serializable {
     public Token() {
     }
 
-    public Token(String token, Long expiredTime, Long userID, int count) {
+    public Token(String token, Long createTime, Long expiredTime, Long userID) {
         this.token = token;
+        this.createTime = createTime;
         this.expiredTime = expiredTime;
         this.userID = userID;
-        this.count = count;
+    }
+
+    public Long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
     }
 
     public String getToken() {
@@ -54,5 +63,16 @@ public class Token implements Serializable {
 
     public void addCount() {
         this.count++;
+    }
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "token='" + token + '\'' +
+                ", createTime=" + createTime +
+                ", expiredTime=" + expiredTime +
+                ", userID=" + userID +
+                ", count=" + count +
+                '}';
     }
 }

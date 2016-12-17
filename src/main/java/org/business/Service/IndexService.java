@@ -7,7 +7,7 @@ import org.business.Common.Out.Out;
  */
 public interface IndexService {
 
-    Out getOut();
+    Out getSomething();
 
-    Out getOutData();
+
 }

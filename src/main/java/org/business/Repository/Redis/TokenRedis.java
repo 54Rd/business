@@ -15,10 +15,6 @@ public class TokenRedis {
     @Autowired
     private RedisTemplate<String, Token> redisTemplate;
 
-    @Autowired
-    private SecretKeySettings secretKeySettings;
-
-
     public Token getToken(String token) {
         return redisTemplate.opsForValue().get(token);
     }

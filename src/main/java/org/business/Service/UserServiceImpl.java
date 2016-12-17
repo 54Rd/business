@@ -28,31 +28,44 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserProfileRepository userProfileRepository;
 
+    @Autowired
+    AuthService authService;
+
     @Override
     public Out createUser(String userName, String realName, String password) {
-        if(userProfileRepository.findCountByUserName(userName)>0){
+        if (userProfileRepository.findCountByUserName(userName) > 0) {
             return OutFactory.create(UserMeta.AccountRepeat);
         }
 
-        UserProfile profile = userProfileRepository.save(new UserProfile(userName,realName));
-        if (profile==null) {
+        UserProfile profile = userProfileRepository.save(new UserProfile(userName, realName));
+        if (profile == null) {
             return OutFactory.create(Meta.FailData);
         }
 
         Long userID = profile.getUserID();
-        UserAuthLocal userAuthLocal = userAuthRepository.save(new UserAuthLocal(userID,userName,password));
-        if (userAuthLocal==null){
+        UserAuthLocal userAuthLocal = userAuthRepository.save(new UserAuthLocal(userID, userName, password));
+        if (userAuthLocal == null) {
             return OutFactory.create(Meta.FailData);
         }
 
-        UserCon userCon = userConRepository.save(new UserCon(userID,100,0,1));
-        if(userCon==null){
+        UserCon userCon = userConRepository.save(new UserCon(userID, 100, 0, 1));
+        if (userCon == null) {
             return OutFactory.create(Meta.FailData);
         }
 
-        return OutFactory.create(Meta.Success);
+        final String mToken = authService.grantToken(userID);
+
+        return OutFactory.create(Meta.Success, new Object() {
+            public String token = mToken;
+        });
     }
 
+    /**
+     * 禁止用户登陆
+     *
+     * @param userName
+     * @return
+     */
     @Override
     public Out banUserByUserName(String userName) {
         Long userID = findUserIDByUserName(userName);
@@ -64,13 +77,13 @@ public class UserServiceImpl implements UserService {
         UserCon userCon = userConRepository.findByUserID(userID);
         userCon.setIsLimit(1);
         userCon = userConRepository.save(userCon);
-        if(userCon==null) {
+        if (userCon == null) {
             return OutFactory.create(Meta.FailData);
         }
         return OutFactory.create(Meta.Success);
     }
 
-    public Long findUserIDByUserName(String userName){
+    public Long findUserIDByUserName(String userName) {
         return userProfileRepository.findUserIDByUserName(userName);
     }
 
