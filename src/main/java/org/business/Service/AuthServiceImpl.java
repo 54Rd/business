@@ -1,5 +1,8 @@
 package org.business.Service;
 
+import org.business.Bean.Token;
+import org.business.Repository.Redis.TokenRedis;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -8,8 +11,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthServiceImpl implements AuthService {
 
+    @Autowired
+    private TokenRedis tokenRedis;
+
+
     @Override
-    public boolean isTokenLegally(String mToken, String userName) {
+    public boolean isTokenLegally(String mToken) {
+        Token token = tokenRedis.getToken(mToken);
+        if (token == null) {
+            return false;
+        }
+
+        long time = System.currentTimeMillis();
+        if (token.getExpiredTime() - time <= 0) {
+            return false;
+        }
+
         return false;
     }
 
