@@ -5,6 +5,7 @@ package org.business.Service;
  */
 public interface AuthService {
 
+    boolean isTokenLegally(String mToken);
 
     String grantToken(Long userID);
 }

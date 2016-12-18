@@ -7,8 +7,7 @@ import java.io.Serializable;
  */
 public class Token implements Serializable {
 
-    private static final long serialVersionUID = -1L;
-
+    private static final long serialVersionUID = 84743797142833527L;
     private String token;
     private Long createTime;
     private Long expiredTime;

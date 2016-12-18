@@ -1,12 +1,15 @@
 package org.business;
 
+import org.business.Bean.Token;
+import org.business.Repository.Redis.TokenRedis;
+import org.business.Service.AuthService;
 import org.business.Service.UserService;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
@@ -19,22 +22,25 @@ public class ApplicationTest {
     @Autowired
     UserService userService;
 
-    String username = "admin";
-    String realname = "isme";
-    String password= "#TGSDGQWTW#$#GSEG";
+    @Autowired
+    AuthService authService;
 
-    @Before
-    public void init(){
+    @Autowired
+    private RedisTemplate<String,Token> redisTemplate;
 
+    @Autowired
+    private TokenRedis tokenRedis;
 
+    public void testToken(){
 
+//        Assert.assertEquals(true,authService.isTokenLegally(token));
     }
 
     @Test
-    public void test(){
-        Assert.assertEquals(true,userService.createUser(username,realname,password));
-//        Assert.assertEquals(true,userService.banUserByUserID((long) 100015));
-//        Assert.assertEquals(true,userService.deleteUserByUserID((long) 100015));
+    public void testRedis(){
+        String token ="20227AB11AD52558EC555F97FC6C950C";
+//        Token t = redisTemplate.opsForValue().get(token);
+        Token t = tokenRedis.getToken(token);
+        Assert.assertEquals(111L,t.getUserID().longValue());
     }
-
 }

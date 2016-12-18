@@ -22,6 +22,8 @@ public class UserAuthLocal {
     private String password;
     @Column(name = "inserttime",insertable = false,updatable = false)
     private Timestamp insertTime;
+    @Column(name = "updatetime",insertable = false,updatable = false)
+    private Timestamp updateTime;
 
     public UserAuthLocal() {
     }
@@ -71,4 +73,26 @@ public class UserAuthLocal {
     public void setInsertTime(Timestamp insertTime) {
         this.insertTime = insertTime;
     }
+
+    public Timestamp getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "UserAuthLocal{" +
+                "id=" + id +
+                ", userID=" + userID +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", insertTime=" + insertTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
+
+
 }

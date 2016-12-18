@@ -13,4 +13,6 @@ public interface UserService  {
 
     Out banUserByUserID(Long userID);
 
+    Out loginUser(String userName,String password);
+
 }

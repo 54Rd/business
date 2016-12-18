@@ -2,6 +2,7 @@ package org.business.Bean;
 
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 /**
  * Created by wangz on 2016/12/6.
@@ -20,6 +21,12 @@ public class UserProfile {
 
     @Column(name = "realname")
     private String realName;
+
+    @Column(name = "inserttime",insertable = false,updatable = false)
+    private Timestamp insertTime;
+
+    @Column(name = "updatetime",insertable = false,updatable = false)
+    private Timestamp updateTime;
 
     public UserProfile() {
     }
@@ -53,12 +60,30 @@ public class UserProfile {
         this.realName = realName;
     }
 
+    public Timestamp getInsertTime() {
+        return insertTime;
+    }
+
+    public void setInsertTime(Timestamp insertTime) {
+        this.insertTime = insertTime;
+    }
+
+    public Timestamp getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
+    }
+
     @Override
     public String toString() {
         return "UserProfile{" +
                 "userID=" + userID +
                 ", userName='" + userName + '\'' +
                 ", realName='" + realName + '\'' +
+                ", insertTime=" + insertTime +
+                ", updateTime=" + updateTime +
                 '}';
     }
 }

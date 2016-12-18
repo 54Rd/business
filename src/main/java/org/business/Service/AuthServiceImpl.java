@@ -1,7 +1,6 @@
 package org.business.Service;
 
 import org.business.Bean.Token;
-import org.business.Bean.UserProfile;
 import org.business.Config.SecretKeySettings;
 import org.business.Repository.Redis.TokenRedis;
 import org.business.Repository.UserProfileRepository;
@@ -28,9 +27,10 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private SecretKeySettings secretKeySettings;
 
-
+    @Override
     public boolean isTokenLegally(String mToken) {
         Token token = tokenRedis.getToken(mToken);
+
         if (token == null) {
             return false;
         }
@@ -47,14 +47,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String grantToken(Long userID) {
+        String tokenV = tokenRedis.getTokenByUserID(userID);
+        if(tokenV!=null){
+            tokenRedis.clearToken(tokenV);
+        }
+
         Long expiredTime = System.currentTimeMillis() + expired * 60 * 1000;
         String t = String.valueOf(userID) + secretKeySettings.getKey() + String.valueOf(expiredTime);
         String t2 = EncryptUtils.md5(t).substring(3, 28) + String.valueOf(System.currentTimeMillis()).substring(4, 9);
         String tokenStr = EncryptUtils.md5(t2);
         Token token = new Token(tokenStr, System.currentTimeMillis(), expiredTime, userID);
         tokenRedis.setToken(tokenStr, token);
-
-        System.out.println(token.toString());
         return tokenStr;
     }
 }

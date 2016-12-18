@@ -1,6 +1,7 @@
 package org.business.Bean;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 /**
@@ -18,9 +19,11 @@ public class UserCon {
     @Column(name = "islimit")
     private int isLimit;
     @Column(name = "datastatus")
-    private int DataStatus;
+    private int dataStatus;
     @Column(name = "inserttime",insertable = false,updatable = false)
     private Timestamp insertTime;
+    @Column(name = "updatetime",insertable = false,updatable = false)
+    private Timestamp updateTime;
 
     public UserCon() {
     }
@@ -29,7 +32,7 @@ public class UserCon {
         this.userID = userID;
         this.roleID = roleID;
         this.isLimit = isLimit;
-        DataStatus = dataStatus;
+        this.dataStatus = dataStatus;
     }
 
     public Long getUserID() {
@@ -57,11 +60,11 @@ public class UserCon {
     }
 
     public int getDataStatus() {
-        return DataStatus;
+        return this.dataStatus;
     }
 
     public void setDataStatus(int dataStatus) {
-        DataStatus = dataStatus;
+        this.dataStatus = dataStatus;
     }
 
     public Timestamp getInsertTime() {
@@ -70,5 +73,25 @@ public class UserCon {
 
     public void setInsertTime(Timestamp insertTime) {
         this.insertTime = insertTime;
+    }
+
+    public Timestamp getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "UserCon{" +
+                "userID=" + userID +
+                ", roleID=" + roleID +
+                ", isLimit=" + isLimit +
+                ", DataStatus=" + dataStatus +
+                ", insertTime=" + insertTime +
+                ", updateTime=" + updateTime +
+                '}';
     }
 }

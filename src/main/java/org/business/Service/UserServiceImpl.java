@@ -13,6 +13,8 @@ import org.business.Repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by wangz on 2016/12/12.
  */
@@ -68,13 +70,26 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Out banUserByUserName(String userName) {
-        Long userID = findUserIDByUserName(userName);
-        return banUserByUserID(userID);
+        List<Long> userIDs = userProfileRepository.findUserIDByUserName(userName);
+        if (userIDs == null) {
+            return OutFactory.create(UserMeta.AccountNotExist);
+        }
+
+        for (Long userID : userIDs) {
+            banUserByUserID(userID);
+        }
+
+        return OutFactory.create(Meta.Success);
     }
 
     @Override
     public Out banUserByUserID(Long userID) {
-        UserCon userCon = userConRepository.findByUserID(userID);
+        List<UserCon> userCons = userConRepository.findByUserID(userID);
+        if (userCons == null) {
+            return OutFactory.create(UserMeta.AccountNotExist);
+        }
+
+        UserCon userCon = userCons.get(0);
         userCon.setIsLimit(1);
         userCon = userConRepository.save(userCon);
         if (userCon == null) {
@@ -83,8 +98,30 @@ public class UserServiceImpl implements UserService {
         return OutFactory.create(Meta.Success);
     }
 
-    public Long findUserIDByUserName(String userName) {
-        return userProfileRepository.findUserIDByUserName(userName);
+    @Override
+    public Out loginUser(String userName, String password) {
+        List<Long> userIDs = userProfileRepository.findUserIDByUserName(userName);
+
+        if (userIDs == null) {//不存在userID
+            return OutFactory.create(UserMeta.AccountError);
+        }
+
+        Long userID = userIDs.get(0);
+        List<UserAuthLocal> authLocals = userAuthRepository.findByUserID(userID);
+        if (authLocals == null) {//不存在密码
+            return OutFactory.create(UserMeta.AccountError);
+        }
+
+        if (!authLocals.get(0).getPassword().equals(password)) {//密码不匹配
+            return OutFactory.create(UserMeta.AccountError);
+        }
+
+        //验证成功
+        final String t = authService.grantToken(userID);
+
+        return OutFactory.create(Meta.Success,new Object(){
+            public String token = t;
+        });
     }
 
 }

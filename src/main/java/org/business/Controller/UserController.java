@@ -1,5 +1,6 @@
 package org.business.Controller;
 
+import org.business.Bean.UserMeta;
 import org.business.Common.Out.Meta;
 import org.business.Common.Out.Out;
 import org.business.Common.BaseController;
@@ -8,10 +9,7 @@ import org.business.Service.UserService;
 import org.business.Utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -40,4 +38,15 @@ public class UserController extends BaseController {
 
         return userService.createUser(name, realname, password);
     }
+
+    @RequestMapping(value = "/login/{username}/{password}",method = RequestMethod.GET)
+    public Out login(@PathVariable String username,@PathVariable String password){
+        if(StringUtils.anyEmpty(username,password)){
+            return OutFactory.create(Meta.ErrorParam);
+        }
+
+        return userService.loginUser(username, password);
+    }
+
+
 }

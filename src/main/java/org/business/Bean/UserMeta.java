@@ -7,7 +7,9 @@ import org.business.Common.Out.IMeta;
  */
 public enum UserMeta implements IMeta {
 
-    AccountRepeat(4001,"该账户已被注册");
+    AccountRepeat(4001,"该账户已被注册"),
+    AccountError(4002,"账户或密码错误"),
+    AccountNotExist(4003,"账户不存在");
 
     private int code;
     private String msg;
